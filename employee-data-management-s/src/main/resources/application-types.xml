@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="mock_response" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: object
+properties:
+    nombre:
+        type: string
+    apellido:
+        type: string
+    correo:
+        type: string         
+    celular:
+        type: string     ]]></types:shape>
+    </types:type>
+    <types:type name="mulesoft_response" format="json">
+      <types:shape format="weave" example="examples/mulesoft_response.json"><![CDATA[%dw 2.0
+
+type mulesoft_response = {|
+  RetrieveEmployeeDirectoryEntryPersonalInformationResponse: {|
+    Person: {|
+      PersonIdentification: {|
+        PersonName: {|
+          GivenName: String, 
+          MiddleName: String
+        |}, 
+        email: String, 
+        phone: String
+      |}
+    |}
+  |}
+|} {"example": "{\\\"RetrieveEmployeeDirectoryEntryPersonalInformationResponse\\\":{\\\"Person\\\":{\\\"PersonIdentification\\\":{\\\"PersonName\\\":{\\\"GivenName\\\":\\\"Juan\\\",\\\"MiddleName\\\":\\\"Perez\\\"},\\\"email\\\":\\\"juanperez@tuweb.com\\\",\\\"phone\\\":\\\"+51987654321\\\"}}}}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#1ea553ff-58cc-4640-8a60-6b06731c11c0">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="mock_response"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="mulesoft_response"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

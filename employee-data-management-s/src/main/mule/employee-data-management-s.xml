@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="3cb37c54-9c5b-44c4-83ff-409e863b90d2" basePath="/employee-data-management-s/v1.0" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="employee-data-management-sFlow" doc:id="062dcef9-5106-48f7-8c7e-8d8e62d97698" >
+		<http:listener doc:name="Listener" doc:id="0067064f-e1aa-4ffc-891e-9c425e4fb769" config-ref="HTTP_Listener_config" path="/employee-directory-entry/personal-information/retrieve"/>
+		<http:request method="POST" doc:name="Request" doc:id="74c5dcc5-9d12-46e6-8ca9-1851aed37f89" url="https://demo0350055.mockable.io/bian/core/consultar-datos-empleado"/>
+		<ee:transform doc:name="Transform Message" doc:id="1ea553ff-58cc-4640-8a60-6b06731c11c0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	RetrieveEmployeeDirectoryEntryPersonalInformationResponse: {
+		Person: {
+			PersonIdentification: {
+				PersonName: {
+					GivenName: payload.nombre,
+					MiddleName: payload.apellido
+				},
+				email: payload.correo,
+				phone: payload.celular
+			}
+		}
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

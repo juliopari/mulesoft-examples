@@ -1,0 +1,14 @@
+{
+    "RetrieveEmployeeDirectoryEntryPersonalInformationResponse": {
+        "Person": {
+            "PersonIdentification": {
+                "PersonName": {
+                    "GivenName": "Juan",
+                    "MiddleName": "Perez"
+                },
+                "email": "juanperez@tuweb.com",
+                "phone": "+51987654321"
+            }
+        }
+    }
+}
